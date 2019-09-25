@@ -20,9 +20,9 @@ exports.handler = async (event, context, callback) => {
     // Do stuff with headless chrome
     await page.setViewport({ width: 800, height: 600 });
     await page.goto("https://secure.brandnewday.nl/service/fondsen-en-koersen");
-    await page.waitFor(1000);
+    await page.waitFor(500);
     await page.select("#fundID", "7001");
-    await page.waitFor(1000);
+    await page.waitFor(500);
 
     jsonData = await page.evaluate(() => {
       const rowNodeList = document.querySelectorAll('table.table');
