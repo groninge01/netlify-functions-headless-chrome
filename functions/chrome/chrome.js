@@ -16,39 +16,45 @@ exports.handler = async (event, context, callback) => {
     })
 
     // Do stuff with headless chrome
-    const page = await browser.newPage()
-    const targetUrl = 'https://davidwells.io'
+    await page.setViewport({ width: 800, height: 600 });
+    await page.goto("https://secure.brandnewday.nl/service/fondsen-en-koersen");
+    await page.waitFor(1000);
+    await page.select("#fundID", "7001");
+    await page.waitFor(1000);
 
-    // Goto page and then do stuff
-    await page.goto(targetUrl, {
-      waitUntil: ["domcontentloaded", "networkidle0"]
-    })
+    jsonData = await page.evaluate(() => {
+      const rowNodeList = document.querySelectorAll('table.table');
+      const rowArray = Array.from(rowNodeList);
+      return rowArray.slice(0,-1).map(tr => {
+        dataNodeList = tr.querySelectorAll('td');
+        const dataArray = Array.from(dataNodeList);
+        const fundValue = dataArray[1].textContent;
 
-    await page.waitForSelector('#phenomic')
+        if (fundValue.match('€ ')) {
+          fundValue = fundValue.substring(2)
+        }
 
-    theTitle = await page.title();
-
-    console.log('done on page', theTitle)
+        return {fundValue};
+      })
+    });
 
   } catch (error) {
-    console.log('error', error)
-    return callback(null, {
+    console.log('error', error);
+    return {
       statusCode: 500,
       body: JSON.stringify({
         error: error
       })
-    })
+    };
   } finally {
     // close browser
     if (browser !== null) {
-      await browser.close()
+      await browser.close();
     }
   }
 
-  return callback(null, {
+  return {
     statusCode: 200,
-    body: JSON.stringify({
-      title: theTitle,
-    })
-  })
+    body: JSON.stringify(jsonData)
+  };
 }
