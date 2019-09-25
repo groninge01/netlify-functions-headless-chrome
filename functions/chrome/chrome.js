@@ -30,7 +30,7 @@ exports.handler = async (event, context, callback) => {
       return rowArray.slice(0,-1).map(tr => {
         dataNodeList = tr.querySelectorAll('td');
         const dataArray = Array.from(dataNodeList);
-        const fundValue = dataArray[1].textContent;
+        let fundValue = dataArray[1].textContent;
 
         if (fundValue.match('€ ')) {
           fundValue = fundValue.substring(2)
