@@ -15,6 +15,8 @@ exports.handler = async (event, context, callback) => {
       headless: chromium.headless,
     })
 
+    const page = await browser.newPage();
+
     // Do stuff with headless chrome
     await page.setViewport({ width: 800, height: 600 });
     await page.goto("https://secure.brandnewday.nl/service/fondsen-en-koersen");
