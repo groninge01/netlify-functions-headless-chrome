@@ -2,7 +2,7 @@ const chromium = require('chrome-aws-lambda')
 const puppeteer = require('puppeteer-core')
 
 exports.handler = async (event, context, callback) => {
-  let theTitle = null
+  let jsonData = null
   let browser = null
   console.log('spawning chrome headless')
   try {
